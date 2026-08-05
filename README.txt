@@ -1,21 +1,22 @@
-FLIGHTY IPHONE LOGBOOK CONVERTER — VERSION 5.0
+FLIGHTY CONVERTER APP ICON FILES
 
-WHAT CHANGED
-- Block time is calculated only after converting airport-local OUT and IN times to UTC.
-- Uses the iPhone/Safari built-in IANA time-zone engine; Luxon is no longer used.
-- Airport time zones are bundled in airports.js, so there is no airports.csv upload problem.
-- Preview shows departure/arrival time zones and OUT UTC / IN UTC values.
+Use these files in your GitHub Pages repository:
 
-INSTALL / UPDATE ON GITHUB PAGES
-1. Delete the old app files from your repository.
-2. Upload every file in this folder.
-3. Commit the changes and wait for GitHub Pages to deploy.
-4. Delete the old Home Screen icon.
-5. In iPhone Settings, clear Safari website data for your GitHub Pages site.
-6. Open the site in Safari and confirm it says VERSION 5.0 NATIVE UTC ENGINE.
-7. Test SAMPLE-FlightyExport.csv. The first MIA–EIS flight diverted to SJU must show 3:38.
-8. The preview UTC check for that flight should show 2026-02-03 18:09Z → 2026-02-03 21:47Z.
-9. Add the site back to the Home Screen.
+- icon.png                 Main 1024x1024 icon
+- apple-touch-icon.png     iPhone Home Screen icon
+- icon-512.png             PWA 512x512 icon
+- icon-192.png             PWA 192x192 icon
+- favicon-32.png           Browser tab icon
+- icon.svg                 Exact same image embedded in SVG format
 
-FILES REQUIRED
-index.html, app.js, airports.js, styles.css, manifest.webmanifest, icon.svg, service-worker.js
+Recommended replacement steps:
+1. Delete the old icon.svg and any old icon PNG files from GitHub.
+2. Upload all files from this folder.
+3. In index.html, use:
+   <link rel="apple-touch-icon" href="apple-touch-icon.png">
+   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+4. In manifest.webmanifest, use icon-192.png and icon-512.png.
+5. Commit the changes.
+6. Delete the old Home Screen app icon from your iPhone.
+7. Clear Safari website data for the GitHub Pages site.
+8. Open the site again and choose Share > Add to Home Screen.
