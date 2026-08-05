@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#0b2545" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Flighty Logbook" />
+  <link rel="manifest" href="manifest.webmanifest?v=5" />
+  <link rel="apple-touch-icon" href="icon.svg" />
+  <link rel="stylesheet" href="styles.css?v=5" />
+  <title>Flighty Logbook Converter</title>
+</head>
+<body>
+  <main class="shell">
+    <header>
+      <div class="eyebrow">PRIVATE, ON-DEVICE CONVERSION · VERSION 5.0 NATIVE UTC ENGINE</div>
+      <h1>Flighty Logbook Converter</h1>
+      <p>Select a Flighty CSV and create an Excel-ready pilot logbook import.</p>
+    </header>
+
+    <section class="card controls">
+      <label class="file-picker">
+        <span>1. Choose Flighty CSV</span>
+        <input id="fileInput" type="file" accept=".csv,text/csv" />
+      </label>
+      <div id="fileName" class="muted">No file selected</div>
+
+      <div class="grid-two">
+        <label>
+          Crew role
+          <select id="crewRole">
+            <option value="SIC" selected>SIC</option>
+            <option value="PIC">PIC</option>
+          </select>
+        </label>
+        <label>
+          Night begins
+          <select id="nightOffset">
+            <option value="15" selected>15 min after sunset</option>
+            <option value="0">At sunset</option>
+            <option value="30">30 min after sunset</option>
+          </select>
+        </label>
+      </div>
+
+      <label class="toggle-row">
+        <input id="useDiversion" type="checkbox" checked />
+        <span>Use diversion airport for time zone, sunset, and landing calculations</span>
+      </label>
+
+      <button id="convertBtn" class="primary" disabled>2. Convert Flights</button>
+      <div id="status" class="status" aria-live="polite">Choose a CSV to begin.</div>
+      <progress id="progress" value="0" max="100" hidden></progress>
+    </section>
+
+    <section id="resultsCard" class="card" hidden>
+      <div class="results-head">
+        <div>
+          <div class="eyebrow">CONVERSION COMPLETE</div>
+          <h2 id="resultTitle">0 flights processed</h2>
+        </div>
+        <div class="download-actions">
+          <button id="xlsxBtn" class="primary">Save Excel</button>
+          <button id="csvBtn">Save CSV</button>
+        </div>
+      </div>
+
+      <div class="summary-grid" id="summaryGrid"></div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th><th>From</th><th>To</th><th>Total</th><th>Night</th><th>PIC</th><th>SIC</th><th>Day Ldg</th><th>Night Ldg</th><th>Time zones</th><th>UTC check</th>
+            </tr>
+          </thead>
+          <tbody id="previewBody"></tbody>
+        </table>
+      </div>
+      <p class="muted small">Yellow preview rows landed at least one hour after local sunset. Review flagged rows before using them as an official logbook record.</p>
+    </section>
+
+    <section class="card info">
+      <h2>What it calculates</h2>
+      <p><strong>Total Time:</strong> actual gate departure to actual gate arrival, converted through UTC using each airport's time zone.</p>
+      <p><strong>Night Time:</strong> estimated airborne time occurring after the selected sunset offset and before sunrise, sampled along the route.</p>
+      <p><strong>Landings:</strong> one day or night landing for each completed flight with an actual landing timestamp.</p>
+      <p class="muted small">Airport coordinates and IANA time zones are bundled with the app. Local airport timestamps are converted to UTC using the iPhone’s built-in time-zone engine before block time is calculated.</p>
+    </section>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.5.3/papaparse.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/suncalc/1.9.0/suncalc.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+  <script>
+  // Remove any previous service worker/cache so iPhone Safari cannot reuse the old converter.
+  if ('serviceWorker' in navigator) navigator.serviceWorker.getRegistrations().then(rs => rs.forEach(r => r.unregister()));
+  if ('caches' in window) caches.keys().then(keys => keys.forEach(k => caches.delete(k)));
+</script>
+  <script src="airports.js?v=5"></script>
+  <script src="app.js?v=5"></script>
+</body>
+</html>
